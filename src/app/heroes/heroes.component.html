@@ -1,0 +1,74 @@
+<div class="mainContainer">
+
+  <form>
+    <div class="row form-group">
+      <label for="table-filtering-search"
+             class="col-2  col-form-label">Text search:</label>
+      <div class="col-10 ">
+        <input id="table-filtering-search"
+               class="form-control"
+               type="text"
+               [formControl]="filter">
+      </div>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Real Name</th>
+        <th scope="col"></th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td></td>
+        <td>
+          <label for="name">new name</label>
+          <input #nameInput
+                 class="form-control"
+                 name="name"
+                 type="text">
+        </td>
+        <td>
+          <label for="realName">new real name</label>
+          <input #realNameInput
+                 class="form-control"
+                 name="realName"
+                 type="text">
+        </td>
+        <td></td>
+        <td><button class="saveBtn"
+                  (click)="newHero(nameInput.value,realNameInput.value)">
+            <fa-icon [icon]="faAdd"></fa-icon>
+          </button></td>
+      </tr>
+      <tr *ngFor="let hero of filteredHeroes$ | async; index as i">
+        <th scope="row">{{ i + 1 }}</th>
+        <td>
+          <ngb-highlight [result]="hero.name | titlecase"
+                         [term]="filter.value"></ngb-highlight>
+        </td>
+        <td>
+          <ngb-highlight [result]="hero.realName | titlecase"
+                         [term]="filter.value"></ngb-highlight>
+        </td>
+        <td>
+          <button class="editBtn"
+                  routerLink="/detail/{{hero.id_hero}}">
+            <fa-icon [icon]="faPen"></fa-icon>
+          </button>
+        </td>
+        <td>
+          <button class="delBtn"
+                  (click)="deleteHero(hero.id_hero)">
+            <fa-icon [icon]="faTrashCan"></fa-icon>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
