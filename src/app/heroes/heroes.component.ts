@@ -1,13 +1,10 @@
-import { NgxUiLoaderService } from 'ngx-ui-loader';
-import { Component, OnInit, PipeTransform, TemplateRef } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { combineLatest, Observable } from 'rxjs';
-
-import { Hero } from '../hero';
-import { HeroService } from '../hero.service';
-import { filter, map, startWith, tap } from 'rxjs/operators';
-import { DecimalPipe } from '@angular/common';
 import { faPen, faTrashCan, faAdd } from '@fortawesome/free-solid-svg-icons';
+import { Component, OnInit, PipeTransform, TemplateRef } from '@angular/core';
+import { map, startWith, tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { HeroService } from '../hero.service';
+import { FormControl } from '@angular/forms';
+import { Hero } from '../hero';
 
 @Component({
   selector: 'app-heroes',
@@ -17,9 +14,9 @@ import { faPen, faTrashCan, faAdd } from '@fortawesome/free-solid-svg-icons';
 
 export class HeroesComponent implements OnInit {
 
-  faTrashCan = faTrashCan;
-  faPen = faPen;
-  faAdd = faAdd;
+  public faTrashCan = faTrashCan;
+  public faPen = faPen;
+  public faAdd = faAdd;
 
   public heroes: Hero[] = [];
   public heroes$: Observable<Hero[]>;
@@ -32,7 +29,10 @@ export class HeroesComponent implements OnInit {
   ) {
     this.heroes$ = this.heroService.getHeroes()
     this.filteredHeroes$ = combineLatest(this.heroes$, this.filter$).pipe(
-      map(([states, filterString]) => states.filter(state => state.name.toLowerCase().indexOf(filterString.toLowerCase()) !== -1))
+      map(([states, filterString]) => states.filter(state => {
+        return state.name.toLowerCase().indexOf(filterString.toLowerCase()) !== -1
+          || state.realName.toLowerCase().indexOf(filterString.toLowerCase()) !== -1
+      }))
     );
 
   }
@@ -43,23 +43,27 @@ export class HeroesComponent implements OnInit {
 
   getHeroes(): void {
     this.heroes$ = this.heroService.getHeroes();
-    // this.heroService.getHeroes()
-    //   .subscribe(heroes => this.heroes = heroes);
+    this.filteredHeroes$ = combineLatest(this.heroes$, this.filter$).pipe(
+      map(([states, filterString]) => states.filter(state => {
+        return state.name.toLowerCase().indexOf(filterString.toLowerCase()) !== -1
+          || state.realName.toLowerCase().indexOf(filterString.toLowerCase()) !== -1
+      }))
+    );
   }
 
   search(text: string): Hero[] {
     return this.heroes.filter(hero => {
       const term = text.toLowerCase();
       return hero.name.toLowerCase().includes(term)
-      // || hero.realName.toLowerCase().includes(term)
+        || hero.realName.toLowerCase().includes(term)
     });
   }
 
-  newHero(_name: string, _realName: string): void {
+  newHero(_name: string, _realName: string, universe: string): void {
     let name = _name.trim();
     let realName = _realName.trim();
     if (!name || !realName) { return; }
-    this.heroService.addHero({ name, realName } as Hero)
+    this.heroService.addHero({ name, realName, universe } as Hero)
       .subscribe(hero => {
         this.getHeroes()
       });

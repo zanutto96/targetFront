@@ -9,11 +9,19 @@
              placeholder="Hero name" />
     </div>
     <div>
-      <label for="hero-name">Hero real : </label>
+      <label for="hero-name">Hero real name: </label>
       <input id="hero-name"
              class="form-control"
              [(ngModel)]="hero.realName"
              placeholder="Hero name" />
+    </div>
+    <div>
+      <label for="hero-name">Hero universe : </label>
+      <select class="form-select"
+              [(ngModel)]="hero.universe">
+        <option value="Marvel">Marvel</option>
+        <option value="DC">DC</option>
+      </select>
     </div>
     <div class="buttons">
       <button type="button"

@@ -19,6 +19,7 @@
         <th scope="col">#</th>
         <th scope="col">Name</th>
         <th scope="col">Real Name</th>
+        <th scope="col">Universe</th>
         <th scope="col"></th>
         <th scope="col"></th>
       </tr>
@@ -40,9 +41,19 @@
                  name="realName"
                  type="text">
         </td>
+        <td>
+          <label for="">universe</label>
+          <select class="form-select"
+                  aria-label="Default select example"
+                  #universeInput>
+            <!-- <option selected>Open this select menu</option> -->
+            <option value="Marvel">Marvel</option>
+            <option value="DC">DC</option>
+          </select>
+        </td>
         <td></td>
         <td><button class="saveBtn"
-                  (click)="newHero(nameInput.value,realNameInput.value)">
+                  (click)="newHero(nameInput.value,realNameInput.value,universeInput.value)">
             <fa-icon [icon]="faAdd"></fa-icon>
           </button></td>
       </tr>
@@ -54,6 +65,10 @@
         </td>
         <td>
           <ngb-highlight [result]="hero.realName | titlecase"
+                         [term]="filter.value"></ngb-highlight>
+        </td>
+        <td>
+          <ngb-highlight [result]="hero.universe | uppercase"
                          [term]="filter.value"></ngb-highlight>
         </td>
         <td>
